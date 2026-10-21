@@ -209,7 +209,7 @@ Evaluated on a held-out test set (20% of 284,807 transactions):
 ## 📁 Project Structure
 
 ```
-fraud-detection-sagemaker/
+AWS-CreditCard-Fraud-Detection-AIML/
 │
 ├── notebooks/
 │   ├── sagemaker_fraud_detection.ipynb   # Main training notebook
@@ -274,8 +274,8 @@ seaborn>=0.12
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/MAOFILHO/fraud-detection-sagemaker.git
-cd fraud-detection-sagemaker
+git clone https://github.com/MAOFILHO/AWS-CreditCard-Fraud-Detection-AIML.git
+cd AWS-CreditCard-Fraud-Detection-AIML
 ```
 
 ### 2. Download the Dataset

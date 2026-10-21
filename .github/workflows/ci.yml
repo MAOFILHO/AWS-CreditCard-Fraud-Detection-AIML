@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate code, notebooks and template
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # The notebook dependencies (sagemaker==1.72.0 etc.) need an AWS account
+      # and are not installed here. These checks need only the two tools below.
+      - name: Install tools
+        run: pip install nbformat cfn-lint
+
+      - name: Compile Python sources
+        run: python -m compileall -q env_setup.py lambda notebooks scripts test
+
+      - name: Validate notebooks
+        run: |
+          python - <<'PY'
+          import glob, nbformat
+          for path in sorted(glob.glob("**/*.ipynb", recursive=True)):
+              nbformat.validate(nbformat.read(path, as_version=4))
+              print("valid", path)
+          PY
+
+      # Warnings (e.g. the deprecated python3.8 Lambda runtime) do not fail the job.
+      - name: Lint CloudFormation template
+        run: cfn-lint --non-zero-exit-code error fraud-detection-using-machine-learning.yaml
